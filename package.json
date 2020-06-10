@@ -1,11 +1,11 @@
 {
-  "name": "source-verify",
+  "name": "ethereum-sourcify-cli",
   "version": "1.0.0",
   "description": "Solidity metadata-based re-compilation and source verification tool",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "bin": "dist/sourcify.js",
+  "types": "dist/sourcify.d.ts",
   "files": [
-    "index.js"
+    "sourcify.js"
   ],
   "repository": {
     "type": "git",
@@ -31,7 +31,8 @@
     "monitor:ci": "scripts/monitor_ci.sh",
     "server:build": "npm run clean && npm run build",
     "server:start": "node ./dist/server.js",
-    "server:test": "tsc && TESTING=true LOCALCHAIN_URL=http://localhost:8545 SERVER_PORT=2000 node ./dist/server.js ./repository"
+    "server:test": "tsc && TESTING=true LOCALCHAIN_URL=http://localhost:8545 SERVER_PORT=2000 node ./dist/server.js ./repository",
+    "cli:test": "./node_modules/.bin/mocha --timeout 10000 test/sourcify.js"
   },
   "keywords": [
     "ethereum",
@@ -49,24 +50,30 @@
   "dependencies": {
     "bunyan": "^1.8.12",
     "cbor": "^4.3.0",
+    "chalk": "^4.0.0",
+    "clear": "^0.1.0",
     "cors": "^2.8.5",
     "death": "^1.1.0",
     "directory-tree": "^2.2.4",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-fileupload": "^1.1.6-alpha.6",
+    "figlet": "^1.4.0",
     "helmet": "^3.22.0",
     "html": "^1.0.0",
     "multihashes": "^0.4.15",
+    "path": "^0.12.7",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.7",
     "serve-index": "^1.9.1",
     "solc": "^0.6.1",
     "solc-version-manager": "^0.1.6",
-    "web3": "^1.2.6"
+    "web3": "^1.2.6",
+    "yargs": "^15.3.1"
   },
   "devDependencies": {
     "@0x/sol-compiler": "^4.0.3",
+    "@jsdevtools/chai-exec": "^2.0.4",
     "@types/bunyan": "^1.8.6",
     "@types/cbor": "^5.0.0",
     "@types/cors": "^2.8.6",
@@ -78,6 +85,7 @@
     "@types/node": "^13.11.1",
     "@types/request-promise-native": "^1.0.17",
     "@types/serve-index": "^1.7.30",
+    "@types/yargs": "^15.0.5",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "ganache-cli": "^6.8.2",

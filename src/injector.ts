@@ -20,10 +20,13 @@ import {
   RecompilationResult,
   getBytecodeWithoutMetadata as trimMetadata,
   InputData,
-  NotFound,
   Match,
   getChainByName
 } from './utils';
+
+import {
+  NotFound
+} from './errorHandler';
 
 declare interface StringMap {
   [key: string]: string;
