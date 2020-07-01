@@ -22,7 +22,9 @@ import {
   InputData,
   NotFound,
   Match,
-  getChainByName
+  getChainByName,
+  Metadata,
+  NewMetadata
 } from './utils';
 
 declare interface StringMap {
@@ -87,17 +89,48 @@ export default class Injector {
     }
   }
 
+
+  // TODO:
+  private convertNewMetadataToMetadata(file: any): Metadata{
+    let newMetadata: NewMetadata = Object.assign({}, JSON.parse(file));
+    let metadata: Metadata = {};
+
+
+    // Can there be multiple compilers?
+    metadata.compiler.version = newMetadata.compilers[0].version;
+    metadata.language = newMetadata.compilers[0].name;
+
+    // for(const element of newMetadata.contractTypes) {
+    //   metadata.output = element;
+    // }
+
+    // Now convert
+    return newMetadata;
+  }
+
   /**
    * Selects metadata files from an array of files that may include sources, etc
    * @param  {string[]} files
    * @return {string[]}         metadata
    */
-  private findMetadataFiles(files: string[]) : any[] {
-    const metadataFiles = [];
+  private findMetadataFiles(files: string[]) : Metadata[] {
+    const metadataFiles: Metadata[] = [];
 
     for (const i in files) {
       try {
         const m = JSON.parse(files[i])
+
+        // For new metadata specification
+        if(m['manifest']){
+          // this.convertNewMetadataToMetadata(files[i]);
+          const compilers: any = m['compilers'];
+          for(const c in compilers){
+            const compiler: any = compilers[c];
+            if(compiler['name'] === 'solidity'){
+              metadataFiles.push(m)
+            }
+          }
+        }
 
         // TODO: this might need a stronger validation check.
         //       many assumptions are made about structure of
@@ -105,6 +138,7 @@ export default class Injector {
         if (m['language'] === 'Solidity') {
           metadataFiles.push(m);
         }
+
       } catch (err) { /* ignore */ }
     }
 
@@ -143,8 +177,9 @@ export default class Injector {
     const byHash = this.storeByHash(files);
 
     for (const fileName in metadata.sources) {
-      let content: string = metadata.sources[fileName].content;
-      const hash: string = metadata.sources[fileName].keccak256;
+      const file = metadata.sources[fileName];
+      let content: string = file.content;
+      const hash: string = file.keccak256 || file.checksum.hash;
       if(content) {
           if (Web3.utils.keccak256(content) != hash) {
               const err = new Error(`Invalid content for file ${fileName}`);
@@ -400,7 +435,7 @@ export default class Injector {
     this.validateAddresses(addresses);
     this.validateChain(chain);
 
-    const metadataFiles = this.findMetadataFiles(files);
+    const metadataFiles: Metadata[] = this.findMetadataFiles(files);
 
     let match: Match = {
       address: null,
@@ -422,7 +457,7 @@ export default class Injector {
         throw err;
       }
 
-      // When injector is called by monitor, the bytecode has already been
+      // When injector is called by monitor, the b  ytecode has already been
       // obtained for address and we only need to compare w/ compilation result.
       if (inputData.bytecode){
 
