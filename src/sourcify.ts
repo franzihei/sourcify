@@ -14,7 +14,7 @@ import * as yargs from 'yargs';
 
 
 import dotenv from 'dotenv';
-dotenv.config();
+dotenv.config({ path: path.resolve(__dirname, "..", "environments/.env") });
 
 clear();
 console.log(
@@ -77,7 +77,8 @@ export const log = Logger.createLogger({
 
 const injector = new Injector({
     localChainUrl: localChainUrl,
-    log: log
+    log: log,
+    infuraPID: process.env.INFURA_ID
 });
   try{
     Promise.all(verify(inputData, injector)).then((result) => {
