@@ -32,7 +32,7 @@
     "server:build": "npm run clean && npm run build",
     "server:start": "node ./dist/server.js",
     "server:test": "tsc && TESTING=true LOCALCHAIN_URL=http://localhost:8545 SERVER_PORT=2000 node ./dist/server.js ./repository",
-    "cli:test": "./node_modules/.bin/mocha --timeout 10000 test/sourcify.js"
+    "cli:test": "npm run build && ./node_modules/.bin/mocha test/sourcify.js"
   },
   "keywords": [
     "ethereum",
