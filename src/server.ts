@@ -4,7 +4,6 @@ import fileUpload from 'express-fileupload';
 import cors from 'cors';
 import { log, findInputFiles } from './utils';
 import Injector from './injector';
-import Logger from 'bunyan';
 import path from 'path';
 import {
   InputData,
