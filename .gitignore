@@ -20,4 +20,3 @@ metacoin-source-verify/
 **/sort.log
 secret.key
 **/.env.secrets
-testcontracts

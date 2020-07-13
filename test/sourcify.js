@@ -5,7 +5,7 @@ chai.use(chaiExec);
 
 describe("CLI test", function() {
 
-    this.timeout(15000);
+    this.timeout(250000);
 
     it("should ask for arguments", function() {
         const myCLI = chaiExec('node dist/sourcify.js');
@@ -33,13 +33,18 @@ describe("CLI test", function() {
         chai.expect(myCLI).exitCode.to.equal(0);
     })
     it("should pass verification (upload files)", function() {
-        const myCLI = chaiExec('node dist/sourcify.js -c 1 -a "0xfff0f5801a9e13426c306455A3BcC5EF3e9BC979" -f "testcontracts/ERC20Standard.sol" "testcontracts/metadata.json"');
+        const myCLI = chaiExec('node dist/sourcify.js -c 1 -a "0xfff0f5801a9e13426c306455A3BcC5EF3e9BC979" -f "testcontracts/ERC20Standard/ERC20Standard.sol" "testcontracts/ERC20Standard/metadata.json"');
         chai.expect(myCLI).to.have.stdout.that.contains("perfect");
         chai.expect(myCLI).exitCode.to.equal(0);
     })
     it("should pass verification (existing sourcecode)", function() {
         const myCLI = chaiExec('node dist/sourcify.js -c 1 -a "0xfff0f5801a9e13426c306455A3BcC5EF3e9BC979"');
         chai.expect(myCLI).to.have.stdout.that.contains("perfect");
+        chai.expect(myCLI).exitCode.to.equal(0);
+    })
+    it("should return status partial", function() {
+        const myCLI = chaiExec('node dist/sourcify.js -c 5 -a "0xf9F5B09d781aE52aE6829C398a9548005bDF82b6" -f "testcontracts/1_Storage/1_Storage.sol" "testcontracts/1_Storage/metadata.json"');
+        chai.expect(myCLI).to.have.stdout.that.contains("partial");
         chai.expect(myCLI).exitCode.to.equal(0);
     })
     it("should say that address is not found", function() {
