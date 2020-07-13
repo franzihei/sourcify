@@ -3,4 +3,4 @@ services:
   ipfs:
     build:
       context: ../
-      dockerfile: services/ipfs/Dockerfile.ipfs
+      dockerfile: src/ipfs/Dockerfile.ipfs
